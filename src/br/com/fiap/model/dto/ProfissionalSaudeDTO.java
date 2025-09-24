@@ -1,7 +1,5 @@
 package br.com.fiap.model.dto;
 
-import java.util.HashMap;
-
 /**
  * Classe Abstrata para servir de base para profissionais de saúde
  * que forem registrados no sistema
@@ -9,11 +7,13 @@ import java.util.HashMap;
  */
 public class ProfissionalSaudeDTO extends Pessoa {
     private int idProfissionalSaude;
-    private HashMap<String, String> documento;
+    private String tipoDocumento;
+    private String documento;
     private String especialidade;
 
     public ProfissionalSaudeDTO() {
     }
+
 
     public int getIdProfissionalSaude() {
         return idProfissionalSaude;
@@ -23,11 +23,19 @@ public class ProfissionalSaudeDTO extends Pessoa {
         this.idProfissionalSaude = idProfissionalSaude;
     }
 
-    public HashMap<String, String> getDocumento() {
+    public String getTipoDocumento() {
+        return tipoDocumento;
+    }
+
+    public void setTipoDocumento(String tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
+    }
+
+    public String getDocumento() {
         return documento;
     }
 
-    public void setDocumento(HashMap<String, String> documento) {
+    public void setDocumento(String documento) {
         this.documento = documento;
     }
 
@@ -38,5 +46,4 @@ public class ProfissionalSaudeDTO extends Pessoa {
     public void setEspecialidade(String especialidade) {
         this.especialidade = especialidade;
     }
-
 }

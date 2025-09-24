@@ -1,7 +1,5 @@
 package br.com.fiap.model.dto;
 
-import br.com.fiap.model.dto.ProfissionalSaude;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -11,6 +9,7 @@ import java.time.LocalTime;
  *
  */
 public class AtendimentoDTO {
+    private int idAtendimento;
     private PacienteDTO paciente;
     private ProfissionalSaudeDTO profissionalSaude;
     private String tipoAtendimento;
@@ -20,6 +19,15 @@ public class AtendimentoDTO {
     private String status;
 
     public AtendimentoDTO() {
+    }
+
+
+    public int getIdAtendimento() {
+        return idAtendimento;
+    }
+
+    public void setIdAtendimento(int idAtendimento) {
+        this.idAtendimento = idAtendimento;
     }
 
     public PacienteDTO getPaciente() {

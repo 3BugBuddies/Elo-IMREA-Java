@@ -8,26 +8,36 @@ import java.util.List;
  * @version 1.0
  */
 public class PacienteDTO extends Pessoa {
-    private ProntuarioDTO prontuario;
-    private List<AcompanhanteDTO> acompanhante;
+    private int idPaciente;
+    private String diagnostico;
+    private AcompanhanteDTO acompanhante;
     private List<LembreteDTO> lembrete;
+    private List<AtendimentoDTO> atendimento;
 
     public PacienteDTO() {
     }
 
-    public ProntuarioDTO getProntuario() {
-        return prontuario;
+    public int getIdPaciente() {
+        return idPaciente;
     }
 
-    public void setProntuario(ProntuarioDTO prontuario) {
-        this.prontuario = prontuario;
+    public void setIdPaciente(int idPaciente) {
+        this.idPaciente = idPaciente;
     }
 
-    public List<AcompanhanteDTO> getAcompanhante() {
+    public String getDiagnostico() {
+        return diagnostico;
+    }
+
+    public void setDiagnostico(String diagnostico) {
+        this.diagnostico = diagnostico;
+    }
+
+    public AcompanhanteDTO getAcompanhante() {
         return acompanhante;
     }
 
-    public void setAcompanhante(List<AcompanhanteDTO> acompanhante) {
+    public void setAcompanhante(AcompanhanteDTO acompanhante) {
         this.acompanhante = acompanhante;
     }
 
@@ -37,5 +47,13 @@ public class PacienteDTO extends Pessoa {
 
     public void setLembrete(List<LembreteDTO> lembrete) {
         this.lembrete = lembrete;
+    }
+
+    public List<AtendimentoDTO> getAtendimento() {
+        return atendimento;
+    }
+
+    public void setAtendimento(List<AtendimentoDTO> atendimento) {
+        this.atendimento = atendimento;
     }
 }

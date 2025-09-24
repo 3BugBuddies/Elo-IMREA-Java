@@ -6,6 +6,7 @@ package br.com.fiap.model.dto;
  */
 public class AcompanhanteDTO extends Pessoa {
     private int idAcompanhante;
+    private int idPaciente;
     private String parentesco;
 
     public AcompanhanteDTO() {}
@@ -16,6 +17,14 @@ public class AcompanhanteDTO extends Pessoa {
 
     public void setIdAcompanhante(int idAcompanhante) {
         this.idAcompanhante = idAcompanhante;
+    }
+
+    public int getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(int idPaciente) {
+        this.idPaciente = idPaciente;
     }
 
     public String getParentesco() {

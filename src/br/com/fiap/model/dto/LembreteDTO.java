@@ -8,6 +8,8 @@ import java.time.LocalDate;
  */
 public class LembreteDTO {
     private int idLembrete;
+    private int idColaborador;
+    private int idAtendimento;
     private String assunto;
     private String mensagem;
     private LocalDate dataEnvio;
@@ -22,6 +24,21 @@ public class LembreteDTO {
 
     public void setIdLembrete(int idLembrete) {
         this.idLembrete = idLembrete;
+    }
+
+    public int getIdColaborador() {
+        return idColaborador;
+    }
+    public void setIdColaborador(int idColaborador) {
+        this.idColaborador = idColaborador;
+    }
+
+    public int getIdAtendimento() {
+        return idAtendimento;
+    }
+
+    public void setIdAtendimento(int idAtendimento) {
+        this.idAtendimento = idAtendimento;
     }
 
     public String getAssunto() {

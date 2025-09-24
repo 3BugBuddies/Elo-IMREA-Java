@@ -1,14 +1,10 @@
 package br.com.fiap.model.dao;
 
+import br.com.fiap.model.dao.interfaces.IDAO;
 import br.com.fiap.model.dto.ProfissionalSaudeDTO;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.HashMap;
+import java.sql.*;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ProfissionalSaudeDAO implements IDAO {
     private Connection con;
@@ -26,7 +22,7 @@ public class ProfissionalSaudeDAO implements IDAO {
     public String inserir(Object object) {
         profissionalSaudeDTO = (ProfissionalSaudeDTO) object;
 
-        String sql = "insert into T_PROFISSIONALSAUDE (nomeCompleto, dataNascimento, cpf, telefone, email, tipoDocumento, documento, especialidade) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into T_PROFISSIONAL_SAUDE (nome_completo, data_nasc, cpf, telefone, email, tipo_documento, documento, especialidade) values (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, profissionalSaudeDTO.getNomeCompleto());
@@ -34,10 +30,8 @@ public class ProfissionalSaudeDAO implements IDAO {
             ps.setString(3, profissionalSaudeDTO.getCpf());
             ps.setString(4, profissionalSaudeDTO.getTelefone());
             ps.setString(5, profissionalSaudeDTO.getEmail());
-            for(Map.Entry<String, String> valor : profissionalSaudeDTO.getDocumento().entrySet()){
-                ps.setString(6, valor.getKey());
-                ps.setString(7, valor.getValue());
-            }
+            ps.setString(6, profissionalSaudeDTO.getTipoDocumento());
+            ps.setString(7, profissionalSaudeDTO.getDocumento());
             ps.setString(8, profissionalSaudeDTO.getEspecialidade());
 
             if (ps.executeUpdate() > 0) {
@@ -63,10 +57,8 @@ public class ProfissionalSaudeDAO implements IDAO {
             ps.setString(1, profissionalSaudeDTO.getNomeCompleto());
             ps.setString(2, profissionalSaudeDTO.getTelefone());
             ps.setString(3, profissionalSaudeDTO.getEmail());
-            for(Map.Entry<String, String> valor : profissionalSaudeDTO.getDocumento().entrySet()){
-                ps.setString(4, valor.getKey());
-                ps.setString(5, valor.getValue());
-            }
+            ps.setString(4, profissionalSaudeDTO.getTipoDocumento());
+            ps.setString(5, profissionalSaudeDTO.getDocumento());
             ps.setString(6, profissionalSaudeDTO.getEspecialidade());
             ps.setInt(7, profissionalSaudeDTO.getIdProfissionalSaude());
 
@@ -86,7 +78,7 @@ public class ProfissionalSaudeDAO implements IDAO {
     public String excluir(Object object) {
         profissionalSaudeDTO = (ProfissionalSaudeDTO) object;
 
-        String sql = "DELETE FROM T_PROFISSIONAL_SAUDE where idProfissionalSaude=?";
+        String sql = "DELETE FROM T_PROFISSIONAL_SAUDE where id_profissional_saude=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)){
             ps.setInt(1, profissionalSaudeDTO.getIdProfissionalSaude());
@@ -103,6 +95,20 @@ public class ProfissionalSaudeDAO implements IDAO {
 
     @Override
     public String listarUm(Object object) {
-        return "";
+        profissionalSaudeDTO = (ProfissionalSaudeDTO) object;
+        String sql = "SELECT * FROM T_PROFISSIONAL_SAUDE where id_profissional_saude=?";
+
+        try(PreparedStatement ps = getCon().prepareStatement(sql)) {
+            ps.setInt(1, profissionalSaudeDTO.getIdProfissionalSaude());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String mensagem = String.format("Id: %s \nNome Completo: %s \nData de Nascimento: %s \nCPF: %s \nTelefone: %s \nE-mail: %s \nDocumento: %s-%s \nEspecialidade: %s",rs.getInt("id_profissional_saude"), rs.getString("nome_completo"), rs.getDate("data_nasc"), rs.getString("cpf"), rs.getString("telefone"), rs.getString("email"), rs.getString("tipo_documento"), rs.getString("documento"), rs.getString("especialidade"));
+                return mensagem;
+            } else {
+                return "Registro não encontrado";
+            }
+        } catch (SQLException e) {
+            return "Erro no comando SQL " + e.getMessage();
+        }
     }
 }
