@@ -2,6 +2,7 @@ package br.com.fiap.model.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 /**
  * Classe que representa um atendimento, que pode ser feito por qualquer profissional da saúde a um paciente
@@ -10,17 +11,17 @@ import java.time.LocalTime;
  */
 public class AtendimentoDTO {
     private int idAtendimento;
-    private PacienteDTO paciente;
-    private ProfissionalSaudeDTO profissionalSaude;
-    private String tipoAtendimento;
+    private String formatoAtendimento;
     private LocalDate data;
     private LocalTime hora;
     private String local;
     private String status;
+    private ProfissionalSaudeDTO profissionalSaude;
+    private PacienteDTO paciente;
+    private List<LembreteDTO> lembrete;
 
     public AtendimentoDTO() {
     }
-
 
     public int getIdAtendimento() {
         return idAtendimento;
@@ -30,28 +31,12 @@ public class AtendimentoDTO {
         this.idAtendimento = idAtendimento;
     }
 
-    public PacienteDTO getPaciente() {
-        return paciente;
+    public String getFormatoAtendimento() {
+        return formatoAtendimento;
     }
 
-    public void setPaciente(PacienteDTO paciente) {
-        this.paciente = paciente;
-    }
-
-    public ProfissionalSaudeDTO getProfissionalSaude() {
-        return profissionalSaude;
-    }
-
-    public void setProfissionalSaude(ProfissionalSaudeDTO profissionalSaude) {
-        this.profissionalSaude = profissionalSaude;
-    }
-
-    public String getTipoAtendimento() {
-        return tipoAtendimento;
-    }
-
-    public void setTipoAtendimento(String tipoAtendimento) {
-        this.tipoAtendimento = tipoAtendimento;
+    public void setFormatoAtendimento(String formatoAtendimento) {
+        this.formatoAtendimento = formatoAtendimento;
     }
 
     public LocalDate getData() {
@@ -84,5 +69,29 @@ public class AtendimentoDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public ProfissionalSaudeDTO getProfissionalSaude() {
+        return profissionalSaude;
+    }
+
+    public void setProfissionalSaude(ProfissionalSaudeDTO profissionalSaude) {
+        this.profissionalSaude = profissionalSaude;
+    }
+
+    public PacienteDTO getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(PacienteDTO paciente) {
+        this.paciente = paciente;
+    }
+
+    public List<LembreteDTO> getLembrete() {
+        return lembrete;
+    }
+
+    public void setLembrete(List<LembreteDTO> lembrete) {
+        this.lembrete = lembrete;
     }
 }

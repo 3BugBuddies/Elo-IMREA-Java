@@ -1,14 +1,11 @@
 package br.com.fiap.model.dao;
 
-import br.com.fiap.model.dao.interfaces.IDAO;
 import br.com.fiap.model.dto.PacienteDTO;
 
 import java.sql.*;
 
-public class PacienteDAO implements IDAO {
-
+public class PacienteDAO{
     private Connection con;
-    private PacienteDTO pacienteDTO;
 
     public PacienteDAO(Connection con) {
         this.con = con;
@@ -18,9 +15,7 @@ public class PacienteDAO implements IDAO {
         return con;
     }
 
-    @Override
-    public String inserir(Object object) {
-        pacienteDTO = (PacienteDTO) object;
+    public String inserir(PacienteDTO pacienteDTO) {
 
         String sql = "insert into T_ELO_PACIENTE (nc_nome_completo, dt_data_nascimento, dc_cpf, tl_telefone, em_email, dg_diagnostico) values (?,?,?,?,?,?)";
 
@@ -43,11 +38,10 @@ public class PacienteDAO implements IDAO {
 
     }
 
-    @Override
-    public String alterar(Object object) {
-        pacienteDTO = (PacienteDTO) object;
+    
+    public String alterar(PacienteDTO pacienteDTO) {
 
-        String sql = "UPDATE T_PACIENTE set nomeCompleto=?, telefone=?, email=? where id_acompanhante=?";
+        String sql = "UPDATE T_ELO_PACIENTE set nomeCompleto=?, telefone=?, email=? where id_acompanhante=?";
 
         try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, pacienteDTO.getNomeCompleto());
@@ -68,14 +62,13 @@ public class PacienteDAO implements IDAO {
         }
     }
 
-    @Override
-    public String excluir(Object object) {
-        pacienteDTO = (PacienteDTO) object;
+    
+    public String excluir(int idPaciente) {
 
-        String sql = "DELETE FROM T_PACIENTE where id_paciente=?";
+        String sql = "DELETE FROM T_ELO_PACIENTE where id_paciente=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)){
-            ps.setInt(1, pacienteDTO.getIdPaciente());
+            ps.setInt(1, idPaciente);
             if (ps.executeUpdate() > 0) {
                 return "Excluido com Sucesso";
             } else {
@@ -87,21 +80,56 @@ public class PacienteDAO implements IDAO {
         }
     }
 
-    @Override
-    public String listarUm(Object object) {
-        pacienteDTO = (PacienteDTO) object;
-        String sql = "SELECT * FROM T_PACIENTE where id_paciente = ?";
+    
+    public PacienteDTO listarUm(int idPaciente) {
+        
+        String sql = "SELECT * FROM T_ELO_PACIENTE where id_paciente = ?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)) {
-            ps.setInt(1, pacienteDTO.getIdPaciente());
+            ps.setInt(1, idPaciente);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return String.format("Nome: %s \nCor: %s \nDescricao: %s", rs.getString("placa"), rs.getString("cor"), rs.getString("descricao"));
+                PacienteDTO paciente = new PacienteDTO();
+                paciente.setIdPaciente(rs.getInt("id_paciente"));
+                paciente.setNomeCompleto(rs.getString("nc_nome_completo"));
+                paciente.setDataNascimento(rs.getDate("dt_data_nascimento").toLocalDate());
+                paciente.setTelefone(rs.getString("tl_telefone"));
+                paciente.setEmail(rs.getString("em_email"));
+                paciente.setDiagnostico(rs.getString("dg_diagnostico"));
+                return paciente;
             } else {
-                return "Registro não encontrado";
+                System.out.println("Registro não encontrado");
+                return null;
             }
         } catch (SQLException e) {
-            return "Erro no comando SQL " + e.getMessage();
+            System.out.println("Erro no comando SQL " + e.getMessage());
         }
+        return null;
+    }
+
+    public PacienteDTO listarUmPorAcompanhante(int idAcompanhante) {
+
+        String sql = "SELECT p.* FROM T_ELO_PACIENTE AS p inner join T_ELO_ACOMPANHANTE AS a ON p.id_paciente = a.id_paciente where a.id_acompanhante= ? ";
+
+        try(PreparedStatement ps = getCon().prepareStatement(sql)) {
+            ps.setInt(1, idAcompanhante);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                PacienteDTO paciente = new PacienteDTO();
+                paciente.setIdPaciente(rs.getInt("id_paciente"));
+                paciente.setNomeCompleto(rs.getString("nc_nome_completo"));
+                paciente.setDataNascimento(rs.getDate("dt_data_nascimento").toLocalDate());
+                paciente.setTelefone(rs.getString("tl_telefone"));
+                paciente.setEmail(rs.getString("em_email"));
+                paciente.setDiagnostico(rs.getString("dg_diagnostico"));
+                return paciente;
+            } else {
+                System.out.println("Registro não encontrado");
+                return null;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro no comando SQL " + e.getMessage());
+        }
+        return null;
     }
 }

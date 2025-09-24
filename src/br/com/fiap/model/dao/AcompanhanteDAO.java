@@ -1,6 +1,4 @@
 package br.com.fiap.model.dao;
-
-import br.com.fiap.model.dao.interfaces.IDAO;
 import br.com.fiap.model.dto.AcompanhanteDTO;
 
 import java.sql.*;
@@ -63,12 +61,12 @@ public class AcompanhanteDAO {
         }
     }
 
-    public String excluir(AcompanhanteDTO acompanhanteDTO) {
+    public String excluir(int idAcompanhante) {
 
         String sql = "DELETE FROM T_ELO_ACOMPANHANTE where id_acompanhante=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)){
-            ps.setInt(1, acompanhanteDTO.getIdAcompanhante());
+            ps.setInt(1, idAcompanhante);
             if (ps.executeUpdate() > 0) {
                 return "Excluido com Sucesso";
             } else {
@@ -80,20 +78,27 @@ public class AcompanhanteDAO {
         }
     }
 
-    public String listarUm(AcompanhanteDTO acompanhanteDTO) {
+    public AcompanhanteDTO listarUm(int idAcompanhante) {
         String sql = "SELECT * FROM T_ELO_ACOMPANHANTE WHERE id_acompanhante=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)) {
-            ps.setInt(1, acompanhanteDTO.getIdAcompanhante());
+            ps.setInt(1, idAcompanhante);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                String mensagem = String.format("Id: %s \nNome Completo: %s \nData de Nascimento: %s \nCPF: %s \nTelefone: %s \nE-mail: %s \nParentesco: %s", rs.getInt("id_acompanhante"), rs.getString("nc_nome_completo"), rs.getDate("dt_data_nascimento"), rs.getString("dc_cpf"), rs.getString("tl_telefone"), rs.getString("em_email"), rs.getString("pr_parentesco"));
-                return mensagem;
+                AcompanhanteDTO acompanhante = new AcompanhanteDTO();
+                acompanhante.setIdPaciente(rs.getInt("id_paciente"));
+                acompanhante.setNomeCompleto(rs.getString("nc_nome_completo"));
+                acompanhante.setTelefone(rs.getString("tl_telefone"));
+                acompanhante.setDataNascimento(rs.getDate("dt_data_nascimento").toLocalDate());
+                acompanhante.setEmail(rs.getString("em_email"));
+                acompanhante.setParentesco(rs.getString("pr_parentesco"));
+                return acompanhante;
             } else {
-                return "Registro não encontrado";
+                return null;
             }
         } catch (SQLException e) {
-            return "Erro no comando SQL " + e.getMessage();
+            System.out.println("Erro ao executar SQL: " + e.getMessage());
+            return null;
         }
     }
 }

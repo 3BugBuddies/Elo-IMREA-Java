@@ -1,16 +1,14 @@
 package br.com.fiap.model.dao;
 
-import br.com.fiap.model.dao.interfaces.IDAO;
-import br.com.fiap.model.dto.AtendimentoDTO;
 import br.com.fiap.model.dto.ColaboradorDTO;
+import br.com.fiap.model.dto.AtendimentoDTO;
 import br.com.fiap.model.dto.LembreteDTO;
 
 import java.sql.*;
 import java.time.LocalDate;
 
-public class ColaboradorDAO implements IDAO {
+public class ColaboradorDAO {
     private Connection con;
-    private ColaboradorDTO colaboradorDTO;
 
     public ColaboradorDAO(Connection con) {
         this.con = con;
@@ -20,9 +18,7 @@ public class ColaboradorDAO implements IDAO {
         return con;
     }
 
-    @Override
-    public String inserir(Object object) {
-        colaboradorDTO = (ColaboradorDTO) object;
+    public String inserir(ColaboradorDTO colaboradorDTO) {
 
         String sql = "insert into T_ELO_COLABORADOR (nc_nome_completo, dt_data_nascimento, dc_cpf, tl_telefone, em_email, un_unidade) values (?,?,?,?,?,?)";
 
@@ -47,9 +43,7 @@ public class ColaboradorDAO implements IDAO {
 
     }
 
-    @Override
-    public String alterar(Object object) {
-        colaboradorDTO = (ColaboradorDTO) object;
+    public String alterar(ColaboradorDTO colaboradorDTO) {
 
         String sql = "UPDATE T_ELO_COLABORADOR set nc_nome_completo=?, tl_telefone=?, em_email=?, un_unidade=? where id_colaborador=?";
 
@@ -71,14 +65,12 @@ public class ColaboradorDAO implements IDAO {
         }
     }
 
-    @Override
-    public String excluir(Object object) {
-        colaboradorDTO = (ColaboradorDTO) object;
+    public String excluir(int idColaborador) {
 
         String sql = "DELETE FROM T_ELO_COLABORADOR where id_colaborador=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)){
-            ps.setInt(1, colaboradorDTO.getIdColaborador());
+            ps.setInt(1, idColaborador);
             if (ps.executeUpdate() > 0) {
                 return "Excluido com Sucesso";
             } else {
@@ -90,23 +82,28 @@ public class ColaboradorDAO implements IDAO {
         }
     }
 
-    @Override
-    public String listarUm(Object object) {
-        colaboradorDTO = (ColaboradorDTO) object;
+    public ColaboradorDTO listarUm(int idColaborador) {
         String sql = "SELECT * FROM T_ELO_COLABORADOR where id_colaborador=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)) {
-            ps.setInt(1, colaboradorDTO.getIdColaborador());
+            ps.setInt(1, idColaborador);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                String mensagem = String.format("Id: %s \nNome Completo: %s \nData de Nascimento: %s \nCPF: %s \nTelefone: %s \nE-mail: %s \nParentesco: %s", rs.getInt("id_colaborador"), rs.getString("nc_nome_completo"), rs.getDate("dt_data_nascimento"), rs.getString("dc_cpf"), rs.getString("tl_telefone"), rs.getString("em_email"), rs.getString("un_unidade"));
-                return mensagem;
+                ColaboradorDTO colaborador = new ColaboradorDTO();
+                colaborador.setNomeCompleto(rs.getString("nc_nome_completo"));
+                colaborador.setTelefone(rs.getString("tl_telefone"));
+                colaborador.setDataNascimento(rs.getDate("dt_data_nascimento").toLocalDate());
+                colaborador.setEmail(rs.getString("em_email"));
+                colaborador.setUnidade(rs.getString("un_unidade"));
+
             } else {
-                return "Registro não encontrado";
+                System.out.println("Registro não encontrado");
+                return null;
             }
         } catch (SQLException e) {
-            return "Erro no comando SQL " + e.getMessage();
+            System.out.println("Erro no comando SQL " + e.getMessage());
         }
+        return null;
     }
 
     public LembreteDTO enviarLembrete(AtendimentoDTO atendimento) {
@@ -118,7 +115,6 @@ public class ColaboradorDAO implements IDAO {
             ps.setInt(1, atendimento.getIdAtendimento());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                lembrete.setIdAtendimento(atendimento.getIdAtendimento());
                 rs.getString("ps.nc_nome_completo");
 
                 String assunto = String.format("Consulta com %s no dia: %s", rs.getString("ps.nc_nome_completo"), rs.getDate("a.dt_data").toLocalDate());
@@ -129,8 +125,7 @@ public class ColaboradorDAO implements IDAO {
                 lembrete.setAssunto(assunto);
                 lembrete.setStatus("ENVIADO");
                 lembrete.setDataEnvio(LocalDate.now());
-                lembrete.setIdColaborador(colaboradorDTO.getIdColaborador());
-
+                lembrete.setAtendimento(atendimento);
                 return lembrete;
             } else {
                 return null;

@@ -1,12 +1,10 @@
 package br.com.fiap.model.dao;
 
-import br.com.fiap.model.dao.interfaces.IDAO;
 import br.com.fiap.model.dto.AtendimentoDTO;
 
 import java.sql.*;
 
 public class AtendimentoDAO{
-
         private Connection con;
 
         public AtendimentoDAO(Connection con) {
@@ -24,7 +22,6 @@ public class AtendimentoDAO{
             try (PreparedStatement ps = getCon().prepareStatement(sql)) {
                 ps.setInt(1, atendimentoDTO.getPaciente().getIdPaciente());
                 ps.setInt(2, atendimentoDTO.getProfissionalSaude().getIdProfissionalSaude());
-                ps.setString(3, atendimentoDTO.getTipoAtendimento());
                 ps.setDate(4, Date.valueOf(atendimentoDTO.getData()));
                 ps.setTime(5, Time.valueOf(atendimentoDTO.getHora()));
                 ps.setString(6, atendimentoDTO.getLocal());
@@ -49,7 +46,6 @@ public class AtendimentoDAO{
 
             try (PreparedStatement ps = getCon().prepareStatement(sql)) {
                 ps.setInt(1, atendimentoDTO.getProfissionalSaude().getIdProfissionalSaude());
-                ps.setString(2, atendimentoDTO.getTipoAtendimento());
                 ps.setDate(3, Date.valueOf(atendimentoDTO.getData()));
                 ps.setTime(4, Time.valueOf(atendimentoDTO.getHora()));
                 ps.setString(5, atendimentoDTO.getLocal());
@@ -85,18 +81,4 @@ public class AtendimentoDAO{
             }
         }
 
-        public String listarUm(AtendimentoDTO atendimentoDTO) {
-            String sql = "SELECT * FROM T_ATENDIMENTO where id_atendimento = ?";
-
-            try(PreparedStatement ps = getCon().prepareStatement(sql);
-                ResultSet rs = ps.executeQuery();) {
-                if (rs.next()) {
-                    return String.format("Nome: %s \nCor: %s \nDescricao: %s", rs.getString("placa"), rs.getString("cor"), rs.getString("descricao"));
-                } else {
-                    return "Registro não encontrado";
-                }
-            } catch (SQLException e) {
-                return "Erro no comando SQL " + e.getMessage();
-            }
-        }
     }

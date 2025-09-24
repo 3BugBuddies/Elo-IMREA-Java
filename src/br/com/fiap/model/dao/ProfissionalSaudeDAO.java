@@ -1,15 +1,12 @@
 package br.com.fiap.model.dao;
 
-import br.com.fiap.model.dao.interfaces.IDAO;
 import br.com.fiap.model.dto.ProfissionalSaudeDTO;
 
 import java.sql.*;
-import java.util.Map;
 
-public class ProfissionalSaudeDAO implements IDAO {
+
+public class ProfissionalSaudeDAO {
     private Connection con;
-    private ProfissionalSaudeDTO profissionalSaudeDTO;
-
     public ProfissionalSaudeDAO(Connection con) {
         this.con = con;
     }
@@ -18,9 +15,8 @@ public class ProfissionalSaudeDAO implements IDAO {
         return con;
     }
 
-    @Override
-    public String inserir(Object object) {
-        profissionalSaudeDTO = (ProfissionalSaudeDTO) object;
+    
+    public String inserir(ProfissionalSaudeDTO profissionalSaudeDTO) {
 
         String sql = "insert into T_PROFISSIONAL_SAUDE (nome_completo, data_nasc, cpf, telefone, email, tipo_documento, documento, especialidade) values (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -47,9 +43,8 @@ public class ProfissionalSaudeDAO implements IDAO {
 
     }
 
-    @Override
-    public String alterar(Object object) {
-        profissionalSaudeDTO = (ProfissionalSaudeDTO) object;
+    
+    public String alterar(ProfissionalSaudeDTO profissionalSaudeDTO) {
 
         String sql = "UPDATE T_PROFISSIONAL_SAUDE set nomeCompleto=?, telefone=?, email=?,tipoDocumento=?, documento=?, especialidade=? where idProfissionalSaude=?";
 
@@ -74,14 +69,13 @@ public class ProfissionalSaudeDAO implements IDAO {
         }
     }
 
-    @Override
-    public String excluir(Object object) {
-        profissionalSaudeDTO = (ProfissionalSaudeDTO) object;
+    
+    public String excluir(int idProfissionalSaude) {
 
         String sql = "DELETE FROM T_PROFISSIONAL_SAUDE where id_profissional_saude=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)){
-            ps.setInt(1, profissionalSaudeDTO.getIdProfissionalSaude());
+            ps.setInt(1, idProfissionalSaude);
             if (ps.executeUpdate() > 0) {
                 return "Excluido com Sucesso";
             } else {
@@ -93,22 +87,32 @@ public class ProfissionalSaudeDAO implements IDAO {
         }
     }
 
-    @Override
-    public String listarUm(Object object) {
-        profissionalSaudeDTO = (ProfissionalSaudeDTO) object;
+    
+    public ProfissionalSaudeDTO listarUm(int idProfissionalSaude) {
         String sql = "SELECT * FROM T_PROFISSIONAL_SAUDE where id_profissional_saude=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)) {
-            ps.setInt(1, profissionalSaudeDTO.getIdProfissionalSaude());
+            ps.setInt(1, idProfissionalSaude);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                String mensagem = String.format("Id: %s \nNome Completo: %s \nData de Nascimento: %s \nCPF: %s \nTelefone: %s \nE-mail: %s \nDocumento: %s-%s \nEspecialidade: %s",rs.getInt("id_profissional_saude"), rs.getString("nome_completo"), rs.getDate("data_nasc"), rs.getString("cpf"), rs.getString("telefone"), rs.getString("email"), rs.getString("tipo_documento"), rs.getString("documento"), rs.getString("especialidade"));
-                return mensagem;
+                ProfissionalSaudeDTO profissionalSaudeDTO = new ProfissionalSaudeDTO();
+                profissionalSaudeDTO.setIdProfissionalSaude(rs.getInt("id_profissional_saude"));
+                profissionalSaudeDTO.setNomeCompleto(rs.getString("nc_nome_completo"));
+                profissionalSaudeDTO.setTelefone(rs.getString("tl_telefone"));
+                profissionalSaudeDTO.setDataNascimento(rs.getDate("dt_data_nascimento").toLocalDate());
+                profissionalSaudeDTO.setEmail(rs.getString("em_email"));
+                profissionalSaudeDTO.setTipoDocumento(rs.getString("tipo_documento"));
+                profissionalSaudeDTO.setDocumento(rs.getString("documento"));
+                profissionalSaudeDTO.setEspecialidade(rs.getString("especialidade"));
+                return profissionalSaudeDTO;
+
             } else {
-                return "Registro não encontrado";
+                System.out.println("Registro não encontrado");
+                return null;
             }
         } catch (SQLException e) {
-            return "Erro no comando SQL " + e.getMessage();
+            System.out.println("Erro no comando SQL " + e.getMessage());
+            return null;
         }
     }
 }

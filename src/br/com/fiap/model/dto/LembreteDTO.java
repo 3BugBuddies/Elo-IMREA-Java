@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class LembreteDTO {
     private int idLembrete;
     private int idColaborador;
-    private int idAtendimento;
+    private AtendimentoDTO atendimento;
     private String assunto;
     private String mensagem;
     private LocalDate dataEnvio;
@@ -33,12 +33,12 @@ public class LembreteDTO {
         this.idColaborador = idColaborador;
     }
 
-    public int getIdAtendimento() {
-        return idAtendimento;
+    public AtendimentoDTO getAtendimento() {
+        return atendimento;
     }
 
-    public void setIdAtendimento(int idAtendimento) {
-        this.idAtendimento = idAtendimento;
+    public void setAtendimento(AtendimentoDTO atendimento) {
+        this.atendimento = atendimento;
     }
 
     public String getAssunto() {

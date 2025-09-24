@@ -10,7 +10,7 @@ import java.util.List;
 public class PacienteDTO extends Pessoa {
     private int idPaciente;
     private String diagnostico;
-    private AcompanhanteDTO acompanhante;
+    private List<AcompanhanteDTO> acompanhante;
     private List<LembreteDTO> lembrete;
     private List<AtendimentoDTO> atendimento;
 
@@ -33,11 +33,11 @@ public class PacienteDTO extends Pessoa {
         this.diagnostico = diagnostico;
     }
 
-    public AcompanhanteDTO getAcompanhante() {
+    public List<AcompanhanteDTO> getAcompanhante() {
         return acompanhante;
     }
 
-    public void setAcompanhante(AcompanhanteDTO acompanhante) {
+    public void setAcompanhante(List<AcompanhanteDTO> acompanhante) {
         this.acompanhante = acompanhante;
     }
 
