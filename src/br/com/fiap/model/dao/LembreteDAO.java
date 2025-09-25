@@ -109,7 +109,7 @@ public class LembreteDAO{
         return null;
     }
 
-    public ArrayList<LembreteDTO> listarPorAtendimento(int idAtendimento) {
+    public ArrayList<LembreteDTO> listarTodosPorAtendimento(int idAtendimento) {
 
         String sql = "SELECT * FROM T_ELO_LEMBRETE WHERE id_atendimento= ?";
 
@@ -159,12 +159,11 @@ public class LembreteDAO{
                     lembreteDTO.setDataEnvio(rs.getDate("dt_data_envio").toLocalDate());
                     lembretes.add(lembreteDTO);
                 }
-            } else{
-                return null;
+                return lembretes;
             }
         } catch (SQLException e) {
             System.out.println("Erro no comando SQL " + e.getMessage());
         }
-        return lembretes;
+        return null;
     }
 }

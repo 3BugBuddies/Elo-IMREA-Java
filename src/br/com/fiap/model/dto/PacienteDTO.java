@@ -1,6 +1,6 @@
 package br.com.fiap.model.dto;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Classe que representa um paciente no sistema, com dados pessoais, prontuário, acompanhante e
@@ -10,9 +10,9 @@ import java.util.List;
 public class PacienteDTO extends Pessoa {
     private int idPaciente;
     private String diagnostico;
-    private List<AcompanhanteDTO> acompanhante;
-    private List<LembreteDTO> lembrete;
-    private List<AtendimentoDTO> atendimento;
+    private ArrayList<AcompanhanteDTO> acompanhante;
+    private ArrayList<LembreteDTO> lembrete;
+    private ArrayList<AtendimentoDTO> atendimento;
 
     public PacienteDTO() {
     }
@@ -33,27 +33,27 @@ public class PacienteDTO extends Pessoa {
         this.diagnostico = diagnostico;
     }
 
-    public List<AcompanhanteDTO> getAcompanhante() {
+    public ArrayList<AcompanhanteDTO> getAcompanhante() {
         return acompanhante;
     }
 
-    public void setAcompanhante(List<AcompanhanteDTO> acompanhante) {
+    public void setAcompanhante(ArrayList<AcompanhanteDTO> acompanhante) {
         this.acompanhante = acompanhante;
     }
 
-    public List<LembreteDTO> getLembrete() {
+    public ArrayList<LembreteDTO> getLembrete() {
         return lembrete;
     }
 
-    public void setLembrete(List<LembreteDTO> lembrete) {
+    public void setLembrete(ArrayList<LembreteDTO> lembrete) {
         this.lembrete = lembrete;
     }
 
-    public List<AtendimentoDTO> getAtendimento() {
+    public ArrayList<AtendimentoDTO> getAtendimento() {
         return atendimento;
     }
 
-    public void setAtendimento(List<AtendimentoDTO> atendimento) {
+    public void setAtendimento(ArrayList<AtendimentoDTO> atendimento) {
         this.atendimento = atendimento;
     }
 }

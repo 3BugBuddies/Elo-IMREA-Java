@@ -2,7 +2,7 @@ package br.com.fiap.model.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Classe que representa um atendimento, que pode ser feito por qualquer profissional da saúde a um paciente
@@ -18,7 +18,7 @@ public class AtendimentoDTO {
     private String status;
     private ProfissionalSaudeDTO profissionalSaude;
     private PacienteDTO paciente;
-    private List<LembreteDTO> lembrete;
+    private ArrayList<LembreteDTO> lembrete;
 
     public AtendimentoDTO() {
     }
@@ -87,11 +87,11 @@ public class AtendimentoDTO {
         this.paciente = paciente;
     }
 
-    public List<LembreteDTO> getLembrete() {
+    public ArrayList<LembreteDTO> getLembrete() {
         return lembrete;
     }
 
-    public void setLembrete(List<LembreteDTO> lembrete) {
+    public void setLembrete(ArrayList<LembreteDTO> lembrete) {
         this.lembrete = lembrete;
     }
 }
