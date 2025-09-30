@@ -1,5 +1,7 @@
 package br.com.fiap.model.dto;
 
+import java.time.LocalDate;
+
 /**
  * Classe que representa o acompanhante de um paciente registrado.
  * @version 1.0
@@ -34,4 +36,5 @@ public class AcompanhanteDTO extends Pessoa {
     public void setParentesco(String parentesco) {
         this.parentesco = parentesco;
     }
+
 }

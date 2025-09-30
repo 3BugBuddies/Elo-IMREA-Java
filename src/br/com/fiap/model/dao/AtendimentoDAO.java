@@ -1,6 +1,7 @@
 package br.com.fiap.model.dao;
 
 import br.com.fiap.model.dto.*;
+import br.com.fiap.model.enums.StatusAtendimento;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class AtendimentoDAO{
                 ps.setDate(4, Date.valueOf(atendimentoDTO.getData()));
                 ps.setTime(5, Time.valueOf(atendimentoDTO.getHora()));
                 ps.setString(6, atendimentoDTO.getLocal());
-                ps.setString(7, atendimentoDTO.getStatus());
+                ps.setString(7, atendimentoDTO.getStatus().name());
 
                 if (ps.executeUpdate() > 0) {
                     return "Inserido com sucesso";
@@ -44,7 +45,7 @@ public class AtendimentoDAO{
 
         public String alterar(AtendimentoDTO atendimentoDTO) {
 
-            String sql = "UPDATE T_ATENDIMENTO set id_profissional_saude=?, tipo_atendimento=?, data=?, hora=?, local=?, status=? where id_atendimento=?";
+            String sql = "UPDATE T_ELO_ATENDIMENTO set id_profissional_saude=?, fm_formato_atendimento=?, dt_data=?, hr_hora=?,lc_local=?, st_status=? where id_atendimento=?";
 
             try (PreparedStatement ps = getCon().prepareStatement(sql)) {
                 ps.setInt(1, atendimentoDTO.getProfissionalSaude().getIdProfissionalSaude());
@@ -52,7 +53,7 @@ public class AtendimentoDAO{
                 ps.setDate(3, Date.valueOf(atendimentoDTO.getData()));
                 ps.setTime(4, Time.valueOf(atendimentoDTO.getHora()));
                 ps.setString(5, atendimentoDTO.getLocal());
-                ps.setString(6, atendimentoDTO.getStatus());
+                ps.setString(6, atendimentoDTO.getStatus().name());
                 ps.setInt(7, atendimentoDTO.getIdAtendimento());
 
                 if (ps.executeUpdate() > 0) {
@@ -69,7 +70,7 @@ public class AtendimentoDAO{
 
         public String excluir(AtendimentoDTO atendimentoDTO) {
 
-            String sql = "DELETE FROM T_ATENDIMENTO where id_atendimento=?";
+            String sql = "DELETE FROM T_ELO_ATENDIMENTO where id_atendimento=?";
 
             try(PreparedStatement ps = getCon().prepareStatement(sql)){
                 ps.setInt(1, atendimentoDTO.getIdAtendimento());
@@ -84,11 +85,11 @@ public class AtendimentoDAO{
             }
         }
 
-    public AtendimentoDTO listarUm(int idAtendimento) {
+    public AtendimentoDTO listarUm(AtendimentoDTO atendimentoDTO) {
         String sql = "SELECT a.id_atendimento, a.fm_formato_atendimento, a.dt_data, a.hr_hora, a.lc_local, a.st_status, p.id_paciente, p.nc_nome_completo AS nome_paciente,ps.id_profissional_saude, ps.nc_nome_completo AS nome_profissional, ps.es_especialidade FROM T_ELO_ATENDIMENTO a INNER JOIN T_ELO_PACIENTE p ON a.id_paciente = p.id_paciente INNER JOIN T_ELO_PROFISSIONAL_SAUDE ps ON a.id_profissional_saude = ps.id_profissional_saude WHERE a.id_atendimento=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)) {
-            ps.setInt(1, idAtendimento);
+            ps.setInt(1, atendimentoDTO.getIdAtendimento());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
 
@@ -107,7 +108,7 @@ public class AtendimentoDAO{
                 atendimento.setData(rs.getDate("dt_data").toLocalDate());
                 atendimento.setHora(rs.getTime("hr_hora").toLocalTime());
                 atendimento.setLocal(rs.getString("lc_local"));
-                atendimento.setStatus(rs.getString("st_status"));
+                atendimento.setStatus(StatusAtendimento.valueOf(rs.getString("st_status")));
                 atendimento.setPaciente(paciente);
                 atendimento.setProfissionalSaude(profissional);
                 return atendimento;
@@ -118,13 +119,13 @@ public class AtendimentoDAO{
         return null;
     }
 
-    public ArrayList<AtendimentoDTO> listarTodosPorPaciente(int idPaciente) {
+    public ArrayList<AtendimentoDTO> listarTodosPorPaciente(PacienteDTO paciente) {
         String sql = "SELECT a.id_atendimento, a.fm_formato_atendimento, a.dt_data, a.hr_hora, a.lc_local, a.st_status,ps.id_profissional_saude, ps.nc_nome_completo AS nome_profissional, ps.es_especialidade FROM T_ELO_ATENDIMENTO a INNER JOIN T_ELO_PROFISSIONAL_SAUDE ps ON a.id_profissional_saude = ps.id_profissional_saude WHERE a.id_paciente=?";
 
         ArrayList<AtendimentoDTO> atendimentos = new ArrayList<>();
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)) {
-            ps.setInt(1, idPaciente);
+            ps.setInt(1, paciente.getIdPaciente());
             ResultSet rs = ps.executeQuery();
             if(rs != null){
                 while (rs.next()) {
@@ -139,16 +140,15 @@ public class AtendimentoDAO{
                     atendimento.setData(rs.getDate("dt_data").toLocalDate());
                     atendimento.setHora(rs.getTime("hr_hora").toLocalTime());
                     atendimento.setLocal(rs.getString("lc_local"));
-                    atendimento.setStatus(rs.getString("st_status"));
+                    atendimento.setStatus(StatusAtendimento.valueOf(rs.getString("st_status")));
                     atendimento.setProfissionalSaude(profissional);
 
                     atendimentos.add(atendimento);
                 }
-                return atendimentos;
             }
         } catch (SQLException e) {
             System.out.println("Erro no comando SQL " + e.getMessage());
         }
-        return null;
+        return atendimentos;
         }
     }

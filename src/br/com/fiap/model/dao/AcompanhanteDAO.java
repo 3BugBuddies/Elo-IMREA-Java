@@ -1,6 +1,7 @@
 package br.com.fiap.model.dao;
 import br.com.fiap.model.dto.AcompanhanteDTO;
 import br.com.fiap.model.dto.AtendimentoDTO;
+import br.com.fiap.model.dto.PacienteDTO;
 import br.com.fiap.model.dto.ProfissionalSaudeDTO;
 
 import java.sql.*;
@@ -65,12 +66,12 @@ public class AcompanhanteDAO {
         }
     }
 
-    public String excluir(int idAcompanhante) {
+    public String excluir(AcompanhanteDTO acompanhanteDTO) {
 
         String sql = "DELETE FROM T_ELO_ACOMPANHANTE where id_acompanhante=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)){
-            ps.setInt(1, idAcompanhante);
+            ps.setInt(1, acompanhanteDTO.getIdAcompanhante());
             if (ps.executeUpdate() > 0) {
                 return "Excluido com Sucesso";
             } else {
@@ -82,21 +83,23 @@ public class AcompanhanteDAO {
         }
     }
 
-    public AcompanhanteDTO listarUm(int idAcompanhante) {
+    public AcompanhanteDTO listarUm(AcompanhanteDTO acompanhanteDTO) {
         String sql = "SELECT * FROM T_ELO_ACOMPANHANTE WHERE id_acompanhante=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)) {
-            ps.setInt(1, idAcompanhante);
+            ps.setInt(1, acompanhanteDTO.getIdAcompanhante());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 AcompanhanteDTO acompanhante = new AcompanhanteDTO();
                 acompanhante.setIdPaciente(rs.getInt("id_paciente"));
                 acompanhante.setIdAcompanhante(rs.getInt("id_acompanhante"));
                 acompanhante.setNomeCompleto(rs.getString("nc_nome_completo"));
+                acompanhante.setCpf(rs.getString("dc_cpf"));
                 acompanhante.setTelefone(rs.getString("tl_telefone"));
                 acompanhante.setDataNascimento(rs.getDate("dt_data_nascimento").toLocalDate());
                 acompanhante.setEmail(rs.getString("em_email"));
                 acompanhante.setParentesco(rs.getString("pr_parentesco"));
+                return acompanhante;
             }
         } catch (SQLException e) {
             System.out.println("Erro ao executar SQL: " + e.getMessage());
@@ -104,13 +107,13 @@ public class AcompanhanteDAO {
         return null;
     }
 
-    public ArrayList<AcompanhanteDTO> listarTodosPorPaciente(int idPaciente) {
+    public ArrayList<AcompanhanteDTO> listarTodosPorPaciente(PacienteDTO paciente) {
         String sql = "SELECT * FROM T_ELO_ACOMPANHANTE WHERE id_paciente=?";
 
         ArrayList<AcompanhanteDTO> acompanhantes = new ArrayList<>();
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)) {
-            ps.setInt(1, idPaciente);
+            ps.setInt(1, paciente.getIdPaciente());
             ResultSet rs = ps.executeQuery();
             if(rs != null){
                 while (rs.next()) {
@@ -125,11 +128,10 @@ public class AcompanhanteDAO {
                     acompanhante.setParentesco(rs.getString("pr_parentesco"));
                     acompanhantes.add(acompanhante);
                 }
-                return acompanhantes;
             }
         } catch (SQLException e) {
             System.out.println("Erro no comando SQL " + e.getMessage());
         }
-        return null;
+        return acompanhantes;
     }
 }

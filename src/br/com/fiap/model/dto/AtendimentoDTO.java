@@ -1,5 +1,7 @@
 package br.com.fiap.model.dto;
 
+import br.com.fiap.model.enums.StatusAtendimento;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ public class AtendimentoDTO {
     private LocalDate data;
     private LocalTime hora;
     private String local;
-    private String status;
+    private StatusAtendimento status;
     private ProfissionalSaudeDTO profissionalSaude;
     private PacienteDTO paciente;
     private ArrayList<LembreteDTO> lembrete;
@@ -63,11 +65,11 @@ public class AtendimentoDTO {
         this.local = local;
     }
 
-    public String getStatus() {
+    public StatusAtendimento getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusAtendimento status) {
         this.status = status;
     }
 
@@ -95,3 +97,4 @@ public class AtendimentoDTO {
         this.lembrete = lembrete;
     }
 }
+

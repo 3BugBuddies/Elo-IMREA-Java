@@ -18,7 +18,7 @@ public class ProfissionalSaudeDAO {
     
     public String inserir(ProfissionalSaudeDTO profissionalSaudeDTO) {
 
-        String sql = "insert into T_PROFISSIONAL_SAUDE (nome_completo, data_nasc, cpf, telefone, email, tipo_documento, documento, especialidade) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into T_ELO_PROFISSIONAL_SAUDE (nc_nome_completo, dt_data_nascimento, dc_cpf, tl_telefone, em_email, tp_tipo_documento, nm_documento, es_especialidade) values (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, profissionalSaudeDTO.getNomeCompleto());
@@ -46,7 +46,7 @@ public class ProfissionalSaudeDAO {
     
     public String alterar(ProfissionalSaudeDTO profissionalSaudeDTO) {
 
-        String sql = "UPDATE T_PROFISSIONAL_SAUDE set nomeCompleto=?, telefone=?, email=?,tipoDocumento=?, documento=?, especialidade=? where idProfissionalSaude=?";
+        String sql = "UPDATE T_ELO_PROFISSIONAL_SAUDE set nc_nome_completo=?, tl_telefone=?, em_email=?,tp_tipo_documento=?, nm_documento=?, es_especialidade=? where idProfissionalSaude=?";
 
         try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, profissionalSaudeDTO.getNomeCompleto());
@@ -70,12 +70,12 @@ public class ProfissionalSaudeDAO {
     }
 
     
-    public String excluir(int idProfissionalSaude) {
+    public String excluir(ProfissionalSaudeDTO profissionalSaude) {
 
-        String sql = "DELETE FROM T_PROFISSIONAL_SAUDE where id_profissional_saude=?";
+        String sql = "DELETE FROM T_ELO_PROFISSIONAL_SAUDE where id_profissional_saude=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)){
-            ps.setInt(1, idProfissionalSaude);
+            ps.setInt(1, profissionalSaude.getIdProfissionalSaude());
             if (ps.executeUpdate() > 0) {
                 return "Excluido com Sucesso";
             } else {
@@ -88,31 +88,28 @@ public class ProfissionalSaudeDAO {
     }
 
     
-    public ProfissionalSaudeDTO listarUm(int idProfissionalSaude) {
-        String sql = "SELECT * FROM T_PROFISSIONAL_SAUDE where id_profissional_saude=?";
+    public ProfissionalSaudeDTO listarUm(ProfissionalSaudeDTO profissional) {
+        String sql = "SELECT * FROM T_ELO_PROFISSIONAL_SAUDE where id_profissional_saude=?";
 
-        try(PreparedStatement ps = getCon().prepareStatement(sql)) {
-            ps.setInt(1, idProfissionalSaude);
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
+            ps.setInt(1, profissional.getIdProfissionalSaude());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 ProfissionalSaudeDTO profissionalSaudeDTO = new ProfissionalSaudeDTO();
                 profissionalSaudeDTO.setIdProfissionalSaude(rs.getInt("id_profissional_saude"));
                 profissionalSaudeDTO.setNomeCompleto(rs.getString("nc_nome_completo"));
                 profissionalSaudeDTO.setTelefone(rs.getString("tl_telefone"));
+                profissionalSaudeDTO.setCpf(rs.getString("dc_cpf"));
                 profissionalSaudeDTO.setDataNascimento(rs.getDate("dt_data_nascimento").toLocalDate());
                 profissionalSaudeDTO.setEmail(rs.getString("em_email"));
-                profissionalSaudeDTO.setTipoDocumento(rs.getString("tipo_documento"));
-                profissionalSaudeDTO.setDocumento(rs.getString("documento"));
-                profissionalSaudeDTO.setEspecialidade(rs.getString("especialidade"));
+                profissionalSaudeDTO.setTipoDocumento(rs.getString("tp_tipo_documento"));
+                profissionalSaudeDTO.setDocumento(rs.getString("nm_documento"));
+                profissionalSaudeDTO.setEspecialidade(rs.getString("es_especialidade"));
                 return profissionalSaudeDTO;
-
-            } else {
-                System.out.println("Registro não encontrado");
-                return null;
             }
         } catch (SQLException e) {
             System.out.println("Erro no comando SQL " + e.getMessage());
-            return null;
         }
+        return null;
     }
 }

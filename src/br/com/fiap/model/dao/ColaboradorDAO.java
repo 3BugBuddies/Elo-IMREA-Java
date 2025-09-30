@@ -65,12 +65,12 @@ public class ColaboradorDAO {
         }
     }
 
-    public String excluir(int idColaborador) {
+    public String excluir(ColaboradorDTO colaborador) {
 
         String sql = "DELETE FROM T_ELO_COLABORADOR where id_colaborador=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)){
-            ps.setInt(1, idColaborador);
+            ps.setInt(1, colaborador.getIdColaborador());
             if (ps.executeUpdate() > 0) {
                 return "Excluido com Sucesso";
             } else {
@@ -82,23 +82,21 @@ public class ColaboradorDAO {
         }
     }
 
-    public ColaboradorDTO listarUm(int idColaborador) {
+    public ColaboradorDTO listarUm(ColaboradorDTO colaborador) {
         String sql = "SELECT * FROM T_ELO_COLABORADOR where id_colaborador=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)) {
-            ps.setInt(1, idColaborador);
+            ps.setInt(1, colaborador.getIdColaborador());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                ColaboradorDTO colaborador = new ColaboradorDTO();
-                colaborador.setNomeCompleto(rs.getString("nc_nome_completo"));
-                colaborador.setTelefone(rs.getString("tl_telefone"));
-                colaborador.setDataNascimento(rs.getDate("dt_data_nascimento").toLocalDate());
-                colaborador.setEmail(rs.getString("em_email"));
-                colaborador.setUnidade(rs.getString("un_unidade"));
-
-            } else {
-                System.out.println("Registro não encontrado");
-                return null;
+                ColaboradorDTO colaboradorEncontrado = new ColaboradorDTO();
+                colaboradorEncontrado.setNomeCompleto(rs.getString("nc_nome_completo"));
+                colaboradorEncontrado.setTelefone(rs.getString("tl_telefone"));
+                colaboradorEncontrado.setCpf(rs.getString("dc_cpf"));
+                colaboradorEncontrado.setDataNascimento(rs.getDate("dt_data_nascimento").toLocalDate());
+                colaboradorEncontrado.setEmail(rs.getString("em_email"));
+                colaboradorEncontrado.setUnidade(rs.getString("un_unidade"));
+                return colaboradorEncontrado;
             }
         } catch (SQLException e) {
             System.out.println("Erro no comando SQL " + e.getMessage());
@@ -106,33 +104,5 @@ public class ColaboradorDAO {
         return null;
     }
 
-    public LembreteDTO enviarLembrete(AtendimentoDTO atendimento) {
-        LembreteDTO lembrete = new LembreteDTO();
-
-        String sql = "SELECT p.nc_nome_completo, ps.nc_nome_completo, a.fm_formato_atendimento, a.hr_hora, a.dt_data, a.lc_local from t_elo_atendimento a inner join t_elo_paciente p on a.id_paciente = p.id_paciente inner join t_elo_profissional_saude ps on a.id_profissional_saude = ps.id_profissional_saude where a.st_status = 'AGENDADO' and a.id_atendimento =?";
-
-        try(PreparedStatement ps = getCon().prepareStatement(sql)) {
-            ps.setInt(1, atendimento.getIdAtendimento());
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                rs.getString("ps.nc_nome_completo");
-
-                String assunto = String.format("Consulta com %s no dia: %s", rs.getString("ps.nc_nome_completo"), rs.getDate("a.dt_data").toLocalDate());
-
-                String mensagem = String.format("Olá, Sr(a) %s \nEste é um lembrete da sua consulta com o profissional %s no dia %s as %s \nFormato: %s \nLocal/Link: %s \nTe aguardamos ansiosamente e qualquer coisa só chamar.", rs.getString("p.nc_nome_completo"), rs.getString("ps.nc_nome_completo"),rs.getDate("a.dt_data").toLocalDate(), rs.getTime("a.hr_hora").toLocalTime(), rs.getString("a.fm_formato_atendimento"), rs.getString("a.lc_local"));
-
-                lembrete.setMensagem(mensagem);
-                lembrete.setAssunto(assunto);
-                lembrete.setStatus("ENVIADO");
-                lembrete.setDataEnvio(LocalDate.now());
-                lembrete.setAtendimento(atendimento);
-                return lembrete;
-            } else {
-                return null;
-            }
-        } catch (SQLException e) {
-            return null;
-        }
-    }
     
 }

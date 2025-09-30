@@ -1,5 +1,7 @@
 package br.com.fiap.model.dto;
 
+import br.com.fiap.model.enums.StatusLembrete;
+
 import java.time.LocalDate;
 
 /**
@@ -13,7 +15,7 @@ public class LembreteDTO {
     private String assunto;
     private String mensagem;
     private LocalDate dataEnvio;
-    private String status;
+    private StatusLembrete status;
 
     public LembreteDTO() {
     }
@@ -65,11 +67,11 @@ public class LembreteDTO {
         this.dataEnvio = dataEnvio;
     }
 
-    public String getStatus() {
+    public StatusLembrete getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusLembrete status) {
         this.status = status;
     }
 }
