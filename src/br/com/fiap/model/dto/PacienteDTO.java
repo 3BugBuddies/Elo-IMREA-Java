@@ -3,9 +3,9 @@ package br.com.fiap.model.dto;
 import java.util.ArrayList;
 
 /**
- * Classe que representa um paciente no sistema, com dados pessoais, prontuário, acompanhante e
- * lembrete que tem dos atendimentos
- * @version 1.0
+ * Classe que representa um paciente no sistema, com dados pessoais, acompanhantes e
+ * lembretes que recebem dos atendimentos
+ * @version 2.0
  */
 public class PacienteDTO extends Pessoa {
     private int idPaciente;

@@ -1,9 +1,8 @@
 package br.com.fiap.model.dto;
 
 /**
- * Classe Abstrata para servir de base para profissionais de saúde
- * que forem registrados no sistema
- * @version 1.0
+ * Classe que representa um profissional da saúde com as informações básicas herdadas e seus respectivos documentos
+ * @version 2.0
  */
 public class ProfissionalSaudeDTO extends Pessoa {
     private int idProfissionalSaude;

@@ -5,17 +5,26 @@ import br.com.fiap.model.dto.PacienteDTO;
 
 import java.sql.*;
 
+/**
+ * Classe responsável por realizar operações de acesso a dados dos pacientes no banco de dados
+ * @version 1.0
+ */
 public class PacienteDAO{
     private Connection con;
+
 
     public PacienteDAO(Connection con) {
         this.con = con;
     }
-
     public Connection getCon() {
         return con;
     }
 
+    /**
+     * Insere um novo paciente no banco de dados
+     * @param pacienteDTO objeto contendo os dados do paciente a ser inserido
+     * @return mensagem informando o resultado da operação
+     */
     public String inserir(PacienteDTO pacienteDTO) {
 
         String sql = "insert into T_ELO_PACIENTE (nc_nome_completo, dt_data_nascimento, dc_cpf, tl_telefone, em_email, dg_diagnostico) values (?,?,?,?,?,?)";
@@ -39,23 +48,27 @@ public class PacienteDAO{
 
     }
 
-    
+
+    /**
+     * Altera os dados de um paciente existente no banco de dados
+     * @param pacienteDTO objeto contendo os novos dados do paciente
+     * @return mensagem informando o resultado da operação
+     */
     public String alterar(PacienteDTO pacienteDTO) {
 
-        String sql = "UPDATE T_ELO_PACIENTE set nomeCompleto=?, telefone=?, email=?, diagnostico=? where id_acompanhante=?";
+        String sql = "UPDATE T_ELO_PACIENTE set nc_nome_completo=?, tl_telefone=?, em_email=?, dg_diagnostico=? where id_paciente=?";
 
         try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, pacienteDTO.getNomeCompleto());
-            ps.setDate(2, Date.valueOf(pacienteDTO.getDataNascimento()));
-            ps.setString(3, pacienteDTO.getTelefone());
-            ps.setString(4, pacienteDTO.getEmail());
-            ps.setString(5, pacienteDTO.getDiagnostico());
-            ps.setInt(6, pacienteDTO.getIdPaciente());
+            ps.setString(2, pacienteDTO.getTelefone());
+            ps.setString(3, pacienteDTO.getEmail());
+            ps.setString(4, pacienteDTO.getDiagnostico());
+            ps.setInt(5, pacienteDTO.getIdPaciente());
 
             if (ps.executeUpdate() > 0) {
-                return "Inserido com sucesso";
+                return "Alterado com sucesso";
             } else {
-                return "Erro ao inserir";
+                return "Erro ao alterar";
             }
 
 
@@ -64,7 +77,12 @@ public class PacienteDAO{
         }
     }
 
-    
+
+    /**
+     * Exclui um paciente do banco de dados
+     * @param paciente objeto contendo o ID do paciente a ser excluído
+     * @return mensagem informando o resultado da operação
+     */
     public String excluir(PacienteDTO paciente) {
 
         String sql = "DELETE FROM T_ELO_PACIENTE where id_paciente=?";
@@ -82,9 +100,14 @@ public class PacienteDAO{
         }
     }
 
-    
+
+    /**
+     * Busca um paciente específico no banco de dados
+     * @param paciente objeto contendo o ID do paciente a ser buscado
+     * @return objeto PacienteDTO com os dados do paciente encontrado ou null
+     */
     public PacienteDTO listarUm(PacienteDTO paciente) {
-        
+
         String sql = "SELECT * FROM T_ELO_PACIENTE where id_paciente=?";
 
         try(PreparedStatement ps = getCon().prepareStatement(sql)) {
@@ -94,6 +117,7 @@ public class PacienteDAO{
                 PacienteDTO pacienteEncontrado = new PacienteDTO();
                 pacienteEncontrado.setIdPaciente(rs.getInt("id_paciente"));
                 pacienteEncontrado.setNomeCompleto(rs.getString("nc_nome_completo"));
+                pacienteEncontrado.setCpf(rs.getString("dc_cpf"));
                 pacienteEncontrado.setDataNascimento(rs.getDate("dt_data_nascimento").toLocalDate());
                 pacienteEncontrado.setTelefone(rs.getString("tl_telefone"));
                 pacienteEncontrado.setEmail(rs.getString("em_email"));
@@ -106,6 +130,11 @@ public class PacienteDAO{
         return null;
     }
 
+    /**
+     * Busca um paciente associado a um acompanhante específico
+     * @param acompanhante objeto contendo o ID do acompanhante
+     * @return objeto PacienteDTO com os dados do paciente encontrado ou null se não encontrar
+     */
     public PacienteDTO listarUmPorAcompanhante(AcompanhanteDTO acompanhante) {
 
         String sql = "SELECT p.* FROM T_ELO_PACIENTE p inner join T_ELO_ACOMPANHANTE a ON p.id_paciente = a.id_paciente where a.id_acompanhante=?";

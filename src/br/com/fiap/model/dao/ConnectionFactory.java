@@ -4,7 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Classe responsável por gerenciar as conexões com o banco de dados
+ * @version 1.0
+ */
 public class ConnectionFactory {
+
     public static Connection abrirConexao() {
         Connection con = null;
         try {

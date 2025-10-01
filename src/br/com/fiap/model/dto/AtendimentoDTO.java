@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 /**
  * Classe que representa um atendimento, que pode ser feito por qualquer profissional da saúde a um paciente
- * @version 1.0
+ * @version 2.0
  *
  */
 public class AtendimentoDTO {
@@ -20,7 +20,6 @@ public class AtendimentoDTO {
     private StatusAtendimento status;
     private ProfissionalSaudeDTO profissionalSaude;
     private PacienteDTO paciente;
-    private ArrayList<LembreteDTO> lembrete;
 
     public AtendimentoDTO() {
     }
@@ -89,12 +88,5 @@ public class AtendimentoDTO {
         this.paciente = paciente;
     }
 
-    public ArrayList<LembreteDTO> getLembrete() {
-        return lembrete;
-    }
-
-    public void setLembrete(ArrayList<LembreteDTO> lembrete) {
-        this.lembrete = lembrete;
-    }
 }
 

@@ -7,6 +7,10 @@ import br.com.fiap.model.dto.LembreteDTO;
 import java.sql.*;
 import java.time.LocalDate;
 
+/**
+ * Classe responsável por realizar operações de acesso a dados dos colaboradores no banco de dados
+ * @version 1.0
+ */
 public class ColaboradorDAO {
     private Connection con;
 
@@ -18,6 +22,11 @@ public class ColaboradorDAO {
         return con;
     }
 
+    /**
+     * Insere um novo colaborador no banco de dados
+     * @param colaboradorDTO objeto contendo os dados do colaborador a ser inserido
+     * @return mensagem informando o resultado da operação
+     */
     public String inserir(ColaboradorDTO colaboradorDTO) {
 
         String sql = "insert into T_ELO_COLABORADOR (nc_nome_completo, dt_data_nascimento, dc_cpf, tl_telefone, em_email, un_unidade) values (?,?,?,?,?,?)";
@@ -43,6 +52,11 @@ public class ColaboradorDAO {
 
     }
 
+    /**
+     * Altera os dados de um colaborador no banco de dados
+     * @param colaboradorDTO objeto contendo os novos dados do colaborador
+     * @return mensagem informando o resultado da operação
+     */
     public String alterar(ColaboradorDTO colaboradorDTO) {
 
         String sql = "UPDATE T_ELO_COLABORADOR set nc_nome_completo=?, tl_telefone=?, em_email=?, un_unidade=? where id_colaborador=?";
@@ -65,6 +79,11 @@ public class ColaboradorDAO {
         }
     }
 
+    /**
+     * Exclui um colaborador do banco de dados
+     * @param colaborador objeto contendo o ID do colaborador a ser excluído
+     * @return mensagem informando o resultado da operação
+     */
     public String excluir(ColaboradorDTO colaborador) {
 
         String sql = "DELETE FROM T_ELO_COLABORADOR where id_colaborador=?";
@@ -82,6 +101,11 @@ public class ColaboradorDAO {
         }
     }
 
+    /**
+     * Busca um colaborador no banco de dados
+     * @param colaborador objeto contendo o ID do colaborador a ser buscado
+     * @return objeto ColaboradorDTO com os dados do colaborador ou null se não encontrar
+     */
     public ColaboradorDTO listarUm(ColaboradorDTO colaborador) {
         String sql = "SELECT * FROM T_ELO_COLABORADOR where id_colaborador=?";
 
@@ -90,6 +114,7 @@ public class ColaboradorDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 ColaboradorDTO colaboradorEncontrado = new ColaboradorDTO();
+                colaboradorEncontrado.setIdColaborador(rs.getInt("id_colaborador"));
                 colaboradorEncontrado.setNomeCompleto(rs.getString("nc_nome_completo"));
                 colaboradorEncontrado.setTelefone(rs.getString("tl_telefone"));
                 colaboradorEncontrado.setCpf(rs.getString("dc_cpf"));
@@ -104,5 +129,4 @@ public class ColaboradorDAO {
         return null;
     }
 
-    
 }

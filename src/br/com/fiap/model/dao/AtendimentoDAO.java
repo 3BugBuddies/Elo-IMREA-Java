@@ -6,6 +6,10 @@ import br.com.fiap.model.enums.StatusAtendimento;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Classe responsável por realizar operações de acesso a dados dos atendimentos no banco de dados
+ * @version 1.0
+ */
 public class AtendimentoDAO{
         private Connection con;
 
@@ -17,6 +21,11 @@ public class AtendimentoDAO{
             return con;
         }
 
+        /**
+         * Insere um novo atendimento no banco de dados
+         * @param atendimentoDTO objeto contendo os dados do atendimento a ser inserido
+         * @return mensagem informando o resultado da operação
+         */
         public String inserir(AtendimentoDTO atendimentoDTO) {
 
             String sql = "insert into T_ELO_ATENDIMENTO (id_paciente, id_profissional_saude, fm_formato_atendimento, dt_data, hr_hora, lc_local, st_status) values (?,?,?,?,?,?,?)";
@@ -43,6 +52,11 @@ public class AtendimentoDAO{
 
         }
 
+        /**
+         * Altera os dados de um atendimento no banco de dados
+         * @param atendimentoDTO objeto contendo os novos dados do atendimento
+         * @return mensagem informando o resultado da operação
+         */
         public String alterar(AtendimentoDTO atendimentoDTO) {
 
             String sql = "UPDATE T_ELO_ATENDIMENTO set id_profissional_saude=?, fm_formato_atendimento=?, dt_data=?, hr_hora=?,lc_local=?, st_status=? where id_atendimento=?";
@@ -68,6 +82,11 @@ public class AtendimentoDAO{
             }
         }
 
+        /**
+         * Exclui um atendimento do banco de dados
+         * @param atendimentoDTO objeto contendo o ID do atendimento a ser excluído
+         * @return mensagem informando o resultado da operação
+         */
         public String excluir(AtendimentoDTO atendimentoDTO) {
 
             String sql = "DELETE FROM T_ELO_ATENDIMENTO where id_atendimento=?";
@@ -85,6 +104,11 @@ public class AtendimentoDAO{
             }
         }
 
+    /**
+     * Busca um atendimento no banco de dados
+     * @param atendimentoDTO objeto contendo o ID do atendimento a ser buscado
+     * @return objeto AtendimentoDTO com os dados do atendimento ou null se não encontrar
+     */
     public AtendimentoDTO listarUm(AtendimentoDTO atendimentoDTO) {
         String sql = "SELECT a.id_atendimento, a.fm_formato_atendimento, a.dt_data, a.hr_hora, a.lc_local, a.st_status, p.id_paciente, p.nc_nome_completo AS nome_paciente,ps.id_profissional_saude, ps.nc_nome_completo AS nome_profissional, ps.es_especialidade FROM T_ELO_ATENDIMENTO a INNER JOIN T_ELO_PACIENTE p ON a.id_paciente = p.id_paciente INNER JOIN T_ELO_PROFISSIONAL_SAUDE ps ON a.id_profissional_saude = ps.id_profissional_saude WHERE a.id_atendimento=?";
 
@@ -119,6 +143,11 @@ public class AtendimentoDAO{
         return null;
     }
 
+    /**
+     * Busca todos os atendimentos de um paciente
+     * @param paciente objeto contendo o ID do paciente
+     * @return lista de objetos com os dados dos atendimentos encontrados
+     */
     public ArrayList<AtendimentoDTO> listarTodosPorPaciente(PacienteDTO paciente) {
         String sql = "SELECT a.id_atendimento, a.fm_formato_atendimento, a.dt_data, a.hr_hora, a.lc_local, a.st_status,ps.id_profissional_saude, ps.nc_nome_completo AS nome_profissional, ps.es_especialidade FROM T_ELO_ATENDIMENTO a INNER JOIN T_ELO_PROFISSIONAL_SAUDE ps ON a.id_profissional_saude = ps.id_profissional_saude WHERE a.id_paciente=?";
 

@@ -12,7 +12,25 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Classe responsável por controlar as operações relacionadas aos profissionais de saúde e fazer contato com a classe que acessa ao banco
+ * @version 1.0
+ */
 public class ProfissionalSaudeController {
+    /**
+     * Realiza a inserção de um novo profissional de saúde no sistema
+     * @param nomeCompleto nome completo do profissional
+     * @param cpf CPF do profissional
+     * @param dataNascimento data de nascimento do profissional
+     * @param email email do profissional
+     * @param telefone telefone do profissional
+     * @param tipoDocumento tipo do documento profissional (CRM, CREFITO, etc.)
+     * @param documento número do documento profissional
+     * @param especialidade especialidade do profissional
+     * @return mensagem informando o resultado da operação
+     * @throws ClassNotFoundException se ocorrer erro ao carregar o driver do banco
+     * @throws SQLException se ocorrer erro na execução do comando sql
+     */
     public String inserirProfissionalSaude(String nomeCompleto, String cpf, LocalDate dataNascimento, String email, String telefone, String tipoDocumento, String documento, String especialidade) throws ClassNotFoundException, SQLException {
         String resultado;
 
@@ -34,6 +52,19 @@ public class ProfissionalSaudeController {
         return resultado;
     }
 
+    /**
+     * Atualiza os dados de um profissional de saúde no sistema
+     * @param nomeCompleto novo nome completo do profissional
+     * @param email novo email do profissional
+     * @param telefone novo telefone do profissional
+     * @param tipoDocumento novo tipo do documento profissional
+     * @param documento novo número do documento profissional
+     * @param especialidade nova especialidade do profissional
+     * @param idProfissionalSaude ID do profissional a ser atualizado
+     * @return mensagem informando o resultado da operação
+     * @throws ClassNotFoundException se ocorrer erro ao carregar o driver do banco
+     * @throws SQLException se ocorrer erro na execução do comando sql
+     */
     public String atualizarProfissionalSaude(String nomeCompleto, String email, String telefone, String tipoDocumento, String documento, String especialidade,  int idProfissionalSaude) throws ClassNotFoundException, SQLException {
         String resultado;
 
@@ -53,6 +84,13 @@ public class ProfissionalSaudeController {
         return resultado;
     }
 
+    /**
+     * Exclui um profissional de saúde do sistema
+     * @param idProfissionalSaude ID do profissional a ser excluído
+     * @return mensagem informando o resultado da operação
+     * @throws ClassNotFoundException se ocorrer erro ao carregar o driver do banco
+     * @throws SQLException se ocorrer erro na execução do comando sql
+     */
     public String deletarProfissionalSaude(int idProfissionalSaude) throws ClassNotFoundException, SQLException {
         String resultado = "";
 
@@ -67,6 +105,13 @@ public class ProfissionalSaudeController {
     }
 
 
+    /**
+     * Busca e retorna os dados de um profissional de saúde
+     * @param idProfissionalSaude ID do profissional a ser buscado
+     * @return string formatada com os dados do profissional
+     * @throws ClassNotFoundException se ocorrer erro ao carregar o driver do banco
+     * @throws SQLException se ocorrer erro na execução do comando sql
+     */
     public String listarUmProfissionalSaude(int idProfissionalSaude) throws ClassNotFoundException, SQLException {
         String resultado = "";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");

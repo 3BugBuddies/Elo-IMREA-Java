@@ -5,8 +5,8 @@ import br.com.fiap.model.enums.StatusLembrete;
 import java.time.LocalDate;
 
 /**
- * Classe que representa o lembrete a ser enviado por um colaborador para um paciente.
- * @version 1.0
+ * Classe que representa o lembrete a ser enviado por um colaborador para um paciente a respeito de um atendimento.
+ * @version 2.0
  */
 public class LembreteDTO {
     private int idLembrete;

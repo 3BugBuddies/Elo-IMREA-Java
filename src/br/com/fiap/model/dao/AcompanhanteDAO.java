@@ -7,6 +7,10 @@ import br.com.fiap.model.dto.ProfissionalSaudeDTO;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Classe responsável por realizar operações de acesso a dados dos acompanhantes no banco de dados
+ * @version 1.0
+ */
 public class AcompanhanteDAO {
     private Connection con;
 
@@ -17,7 +21,12 @@ public class AcompanhanteDAO {
     public Connection getCon() {
         return con;
     }
-    
+
+    /**
+     * Insere um novo acompanhante no banco de dados
+     * @param acompanhanteDTO objeto contendo os dados do acompanhante a ser cadastrado
+     * @return mensagem informando o resultado da operação
+     */
     public String inserir(AcompanhanteDTO acompanhanteDTO) {
 
         String sql = "insert into T_ELO_ACOMPANHANTE (nc_nome_completo, dt_data_nascimento, dc_cpf, tl_telefone, em_email, pr_parentesco, id_paciente) values (?,?,?,?,?,?, ?)";
@@ -43,6 +52,11 @@ public class AcompanhanteDAO {
         }
     }
 
+    /**
+     * Altera os dados de um acompanhante no banco de dados
+     * @param acompanhanteDTO objeto contendo os novos dados do acompanhante
+     * @return mensagem informando o resultado da operação
+     */
     public String alterar(AcompanhanteDTO acompanhanteDTO) {
 
         String sql = "UPDATE T_ELO_ACOMPANHANTE set nc_nome_completo=?, tl_telefone=?, em_email=?, pr_parentesco=? where id_acompanhante=?";
@@ -66,6 +80,11 @@ public class AcompanhanteDAO {
         }
     }
 
+    /**
+     * Exclui um acompanhante do banco de dados
+     * @param acompanhanteDTO objeto contendo o ID do acompanhante a ser excluído
+     * @return mensagem informando o resultado da operação
+     */
     public String excluir(AcompanhanteDTO acompanhanteDTO) {
 
         String sql = "DELETE FROM T_ELO_ACOMPANHANTE where id_acompanhante=?";
@@ -83,6 +102,11 @@ public class AcompanhanteDAO {
         }
     }
 
+    /**
+     * Busca um acompanhante no banco de dados
+     * @param acompanhanteDTO objeto contendo o ID do acompanhante a ser buscado
+     * @return objeto de Acompanhante com os dados encontrados ou null
+     */
     public AcompanhanteDTO listarUm(AcompanhanteDTO acompanhanteDTO) {
         String sql = "SELECT * FROM T_ELO_ACOMPANHANTE WHERE id_acompanhante=?";
 
@@ -107,6 +131,11 @@ public class AcompanhanteDAO {
         return null;
     }
 
+    /**
+     * Busca todos os acompanhantes de um paciente específico
+     * @param paciente objeto contendo o ID do paciente
+     * @return lista de objetos AcompanhanteDTO com os dados dos acompanhantes encontrados
+     */
     public ArrayList<AcompanhanteDTO> listarTodosPorPaciente(PacienteDTO paciente) {
         String sql = "SELECT * FROM T_ELO_ACOMPANHANTE WHERE id_paciente=?";
 

@@ -2,6 +2,10 @@ package br.com.fiap.model.dto;
 
 import java.time.LocalDate;
 
+/**
+ * Classe abstrata que representa os dados básicos de uma pessoa no sistema
+ * @version 1.0
+ */
 public abstract class Pessoa {
     private String nomeCompleto;
     private LocalDate dataNascimento;

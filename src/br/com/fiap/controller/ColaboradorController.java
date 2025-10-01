@@ -17,7 +17,23 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+ * Classe responsável por controlar as operações relacionadas aos colaboradores e fazer contato com a classe que acessa ao banco
+ * @version 1.0
+ */
 public class ColaboradorController {
+    /**
+     * Realiza a inserção de um novo colaborador no sistema
+     * @param nomeCompleto nome completo do colaborador
+     * @param cpf CPF do colaborador
+     * @param dataNascimento data de nascimento do colaborador
+     * @param email email do colaborador
+     * @param telefone telefone do colaborador
+     * @param unidade unidade de trabalho do colaborador
+     * @return mensagem informando o resultado da operação
+     * @throws ClassNotFoundException se ocorrer erro ao carregar o driver do banco
+     * @throws SQLException se ocorrer erro na execução do comando sql
+     */
     public String inserirColaborador(String nomeCompleto, String cpf, LocalDate dataNascimento, String email, String telefone, String unidade) throws ClassNotFoundException, SQLException {
         String resultado;
 
@@ -37,6 +53,17 @@ public class ColaboradorController {
 
     }
 
+    /**
+     * Atualiza os dados de um colaborador existente no sistema
+     * @param nomeCompleto novo nome completo do colaborador
+     * @param email novo email do colaborador
+     * @param telefone novo telefone do colaborador
+     * @param unidade nova unidade de trabalho do colaborador
+     * @param idColaborador ID do colaborador a ser atualizado
+     * @return mensagem informando o resultado da operação
+     * @throws ClassNotFoundException se ocorrer erro ao carregar o driver do banco
+     * @throws SQLException se ocorrer erro na execução do comando sql
+     */
     public String atualizarColaborador(String nomeCompleto, String email, String telefone, String unidade, int idColaborador) throws ClassNotFoundException, SQLException {
         String resultado;
         Connection con = ConnectionFactory.abrirConexao();
@@ -53,7 +80,14 @@ public class ColaboradorController {
 
     }
 
-    public String deletarColaborador(int idColaborador) throws ClassNotFoundException, SQLException {
+    /**
+     * Exclui um colaborador do sistema
+     * @param idColaborador ID do colaborador a ser excluído
+     * @return mensagem informando o resultado da operação
+     * @throws ClassNotFoundException se ocorrer erro ao carregar o driver do banco
+     * @throws SQLException se ocorrer erro na execução do comando sql
+     */
+    public String excluirColaborador(int idColaborador) throws ClassNotFoundException, SQLException {
         String resultado;
 
         ColaboradorDTO colaborador = new ColaboradorDTO();
@@ -67,6 +101,13 @@ public class ColaboradorController {
 
     }
 
+    /**
+     * Busca e retorna os dados de um colaborador
+     * @param idColaborador ID do colaborador a ser buscado
+     * @return string formatada com os dados do colaborador
+     * @throws ClassNotFoundException se ocorrer erro ao carregar o driver do banco
+     * @throws SQLException se ocorrer erro na execução do comando sql
+     */
     public String listarUmColaborador(int idColaborador) throws ClassNotFoundException, SQLException {
         String resultado = "";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
